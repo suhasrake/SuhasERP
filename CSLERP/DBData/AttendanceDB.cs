@@ -87,37 +87,37 @@ namespace CSLERP.DBData
             return lobList;
         }
 
-        //public List<attendance> getEmployeestatusList()
-        //{
-        //    attendance lob;
-        //    List<attendance> lobList = new List<attendance>();
-        //    try
-        //    {
-        //        SqlConnection conn = new SqlConnection(Login.connString);
-        //        string query = " select b.EmployeeID , a.AttendanceStatus from Attendance a, " +
-        //                      " (select distinct b.EmployeeID " +
-        //                      " from ViewEmployeeLocation b where " +
-        //                      " b.OfficeID = (select top 1 OfficeID from EmployeePosting " +
-        //                      " where EmployeeID = '" + Login.empLoggedIn + "' order by PostingDate desc)) b " +
-        //                      " where a.EmployeeID = b.EmployeeID and StatusDate = convert(date, GETDATE())   ";
-        //        SqlCommand cmd = new SqlCommand(query, conn);
-        //        conn.Open();
-        //        SqlDataReader reader = cmd.ExecuteReader();
-        //        while (reader.Read())
-        //        {
-        //            lob = new attendance();
-        //            lob.EmployeeID = reader.GetString(0);
-        //            lob.AttendenceStatus = reader.GetString(1);
-        //            lobList.Add(lob);
-        //        }
-        //        conn.Close();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        MessageBox.Show("Error querying Status List Data");
-        //    }
-        //    return lobList;
-        //}
+        public List<attendance> getEmployeestatusList()
+        {
+            attendance lob;
+            List<attendance> lobList = new List<attendance>();
+            try
+            {
+                SqlConnection conn = new SqlConnection(Login.connString);
+                string query = " select b.EmployeeID , a.AttendanceStatus from Attendance a, " +
+                              " (select distinct b.EmployeeID " +
+                              " from ViewEmployeeLocation b where " +
+                              " b.OfficeID = (select top 1 OfficeID from EmployeePosting " +
+                              " where EmployeeID = '" + Login.empLoggedIn + "' order by PostingDate desc)) b " +
+                              " where a.EmployeeID = b.EmployeeID and StatusDate = convert(date, GETDATE())   ";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    lob = new attendance();
+                    lob.EmployeeID = reader.GetString(0);
+                    lob.AttendenceStatus = reader.GetString(1);
+                    lobList.Add(lob);
+                }
+                conn.Close();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error querying Status List Data");
+            }
+            return lobList;
+        }
 
 
 

@@ -423,8 +423,8 @@ namespace CSLERP
                 filterTimer.Enabled = true;
                 filterTimer.Start();
             }
-
         }
+
         private void handlefilterTimerTimeout(object sender, EventArgs e)
         {
             filterTimer.Enabled = false;
