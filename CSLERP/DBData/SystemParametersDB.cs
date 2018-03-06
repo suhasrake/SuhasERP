@@ -121,8 +121,6 @@ namespace CSLERP.DBData
                 {
                     return false;
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -132,27 +130,27 @@ namespace CSLERP.DBData
             return status;
         }
 
-        public string getSystemparametersforID(string id)
-        {
-            string value = "";
-            try
-            {
-                SqlConnection conn = new SqlConnection(Login.connString);
-                string query = "select Value from SystemParameters where ID='"+id+"'";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    value = reader.GetString(0);
-                }
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this.ToString() + "-" + System.Reflection.MethodBase.GetCurrentMethod().Name + "() : Error");
-            }
-            return value;
-        }
+        //public string getSystemparametersforID(string id)
+        //{
+        //    string value = "";
+        //    try
+        //    {
+        //        SqlConnection conn = new SqlConnection(Login.connString);
+        //        string query = "select Value from SystemParameters where ID='"+id+"'";
+        //        SqlCommand cmd = new SqlCommand(query, conn);
+        //        conn.Open();
+        //        SqlDataReader reader = cmd.ExecuteReader();
+        //        if (reader.Read())
+        //        {
+        //            value = reader.GetString(0);
+        //        }
+        //        conn.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(this.ToString() + "-" + System.Reflection.MethodBase.GetCurrentMethod().Name + "() : Error");
+        //    }
+        //    return value;
+        //}
     }
 }

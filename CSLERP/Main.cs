@@ -204,8 +204,7 @@ namespace CSLERP
                         intex++;
                     }
                 }
-            }
-        
+            }        
         }
 
 
@@ -248,6 +247,9 @@ namespace CSLERP
                 MessageBox.Show("Main() : Error 3");
             }
         }
+
+         
+
 
 
 
@@ -717,5 +719,21 @@ namespace CSLERP
                        : Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
+
+        //07-03-2018
+        public static string getSystemparametersforID(string id)
+        {
+            string value = "";
+            try
+            {
+                value = SystemParameters.Where(x => x.ID == id).Select(x=>x.Value).FirstOrDefault().ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(System.Reflection.MethodBase.GetCurrentMethod().Name + "() : Error");
+            }
+            return value;
+        }
+
     }
 }
