@@ -394,31 +394,6 @@ namespace CSLERP
         {
 
         }
-        public string showrandom()
-        {
-            string password = "";
-            try
-            {
-                password = RandomString();
-                ////if (MessageBox.Show(" New Password of " + txtEmpName.Text + " is : \n" + password,
-                ////    "New Password", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                ////    == DialogResult.OK)
-                {
-                    ERPUserDB udb = new ERPUserDB();
-                    string pw = Utilities.GenerateSHA256String(password);
-                    if (udb.updateUserPassword(txtID.Text, pw))
-                    {
-                        //MessageBox.Show("Password of " + txtEmpName.Text + " has been Changed.\nNew password emailed to "+txtEmpName.Text);
-                        //clearUserData();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            return password;
-        }
         private string RandomString()
         {
             string Password = "";
@@ -431,8 +406,7 @@ namespace CSLERP
                 char ch;
                 int num = rnd.Next(4, 8);
                 for (int i = 0; i < num; i++)
-                {
-                    ch = input[random.Next(0, input.Length)];
+                {                    ch = input[random.Next(0, input.Length)];
                     builder.Append(ch);
                 }
                 Password = "CS4" + builder.ToString();

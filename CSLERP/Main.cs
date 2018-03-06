@@ -204,8 +204,7 @@ namespace CSLERP
                         intex++;
                     }
                 }
-            }
-        
+            }        
         }
 
 
