@@ -29,6 +29,7 @@ namespace CSLERP
         System.Windows.Forms.Button prevbtn = null;
         public static List<menuitem> menuitems;
         public static List<menuitem> menuhdritems;
+        public static List<systemparam> SystemParameters;
         public static char delimiter1 = (char)222; //minor delimiter
         public static char delimiter2 = (char)223; //major delimiter
         public static string documentDirectory = "";
@@ -42,6 +43,7 @@ namespace CSLERP
         int intex = 0;
         int val = 0;
         public static List<documentreceiver> DocumentReceivers;
+        
         public Main()
         {
             try
@@ -86,6 +88,8 @@ namespace CSLERP
             dashBtn.PerformClick();
             DocumentReceiverDB drdb = new DocumentReceiverDB();
             DocumentReceivers = drdb.getDocumentReceiver().Where(recv => recv.EmployeeID == Login.empLoggedIn && recv.Status == 1).ToList();
+            SystemParametersDB spdb = new SystemParametersDB();
+            SystemParameters = spdb.getSystemparameters();
         }
         private void initVariables()
         {

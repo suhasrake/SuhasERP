@@ -1095,6 +1095,13 @@
     <Compile Include="SubLedgerOld.designer.cs">
       <DependentUpon>SubLedgerOld.cs</DependentUpon>
     </Compile>
+    <Compile Include="DBData\SystemParametersDB.cs" />
+    <Compile Include="SystemParameters.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SystemParameters.designer.cs">
+      <DependentUpon>SystemParameters.cs</DependentUpon>
+    </Compile>
     <Compile Include="TapalPick.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1609,6 +1616,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SubLedgerOld.resx">
       <DependentUpon>SubLedgerOld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SystemParameters.resx">
+      <DependentUpon>SystemParameters.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TapalPick.resx">
       <DependentUpon>TapalPick.cs</DependentUpon>
