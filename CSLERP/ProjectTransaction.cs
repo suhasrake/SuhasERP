@@ -23,6 +23,11 @@ namespace CSLERP
         string[] Headers = { "PO Received", "Work Order Issued" , "Material Supplied" , "Material Payment",
                                     "WO payment","Employee Payments","Other payments","Receipts"};
         string prev = "";
+        Form frmPopup = new Form();
+        int prjstat = 0;
+        DataGridView grdEmpList = new DataGridView();
+        TextBox txtSearch = new TextBox();
+        ComboBox cmbprojectstat = new ComboBox();
         public ProjectTransaction()
         {
             try
@@ -66,7 +71,7 @@ namespace CSLERP
             dtTargetDate.CustomFormat = "dd-MM-yyyy";
             pnlUI.Controls.Add(pnlList);
             enableBottomButtons();
-            ProjectHeaderDB.fillprojectCombo(cmbProject);
+            //ProjectHeaderDB.fillprojectCombo(cmbProject);
             grdMainList.Visible = true;
             grdMainList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             grdDetailList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
@@ -141,7 +146,7 @@ namespace CSLERP
                     string Head = grdMainList.CurrentRow.Cells["Received"].Value.ToString();
                     if(Head.Equals("PO Received"))
                     {
-                        List<popiheader> ppopi = POPIHeaderDB.getPOPIINFOForProjectTrans(cmbProject.SelectedItem.ToString());
+                        List<popiheader> ppopi = POPIHeaderDB.getPOPIINFOForProjectTrans(txtProjectID.Text);
                         int i = 1;
                         grdDetailList.Columns["DocumentNo"].HeaderText = "Tracking No";
                         grdDetailList.Columns["DocumentDate"].HeaderText = "Tracking Date";
@@ -180,7 +185,7 @@ namespace CSLERP
                         grdDetailList.Columns["CustPODate"].Visible = false;
                         grdDetailList.Columns["gValue"].Visible = true;
                         grdDetailList.Columns["TaxAmount"].Visible = true;
-                        List<workorderheader> wohList = WorkOrderDB.getRVINFOForProjectTrans(cmbProject.SelectedItem.ToString());
+                        List<workorderheader> wohList = WorkOrderDB.getRVINFOForProjectTrans(txtProjectID.Text);
                         foreach (workorderheader woh in wohList)
                         {
                             grdDetailList.Rows.Add();
@@ -206,7 +211,7 @@ namespace CSLERP
                         grdDetailList.Columns["CustPODate"].Visible = false;
                         grdDetailList.Columns["gValue"].Visible = true;
                         grdDetailList.Columns["TaxAmount"].Visible = true;
-                        List<invoiceoutheader> iohList = InvoiceOutHeaderDB.getRVINFOForProjectTrans(cmbProject.SelectedItem.ToString());
+                        List<invoiceoutheader> iohList = InvoiceOutHeaderDB.getRVINFOForProjectTrans(txtProjectID.Text);
                         foreach (invoiceoutheader ioh in iohList)
                         {
                             grdDetailList.Rows.Add();
@@ -235,7 +240,7 @@ namespace CSLERP
                         grdDetailList.Columns["Customer"].HeaderText = "SLName";
                         grdDetailList.Columns["gValue"].Visible = true;
                         grdDetailList.Columns["TaxAmount"].Visible = true;
-                        List<paymentvoucher> pvhList = PaymentVoucherDB.getRVINFOForProjectTrans(cmbProject.SelectedItem.ToString(),1);
+                        List<paymentvoucher> pvhList = PaymentVoucherDB.getRVINFOForProjectTrans(txtProjectID.Text, 1);
                         foreach (paymentvoucher pvh in pvhList)
                         {
                             grdDetailList.Rows.Add();
@@ -263,7 +268,7 @@ namespace CSLERP
                         grdDetailList.Columns["Customer"].HeaderText = "SLName";
                         grdDetailList.Columns["gValue"].Visible = true;
                         grdDetailList.Columns["TaxAmount"].Visible = true;
-                        List<paymentvoucher> pvhList = PaymentVoucherDB.getRVINFOForProjectTrans(cmbProject.SelectedItem.ToString(),2);
+                        List<paymentvoucher> pvhList = PaymentVoucherDB.getRVINFOForProjectTrans(txtProjectID.Text, 2);
                         foreach (paymentvoucher pvh in pvhList)
                         {
                             grdDetailList.Rows.Add();
@@ -295,7 +300,7 @@ namespace CSLERP
                         grdDetailList.Columns["Customer"].HeaderText = "SLName";
                         grdDetailList.Columns["gValue"].Visible = true;
                         grdDetailList.Columns["TaxAmount"].Visible = true;
-                        List<paymentvoucher> pvhList = PaymentVoucherDB.getRVINFOForProjectTrans(cmbProject.SelectedItem.ToString(), 3);
+                        List<paymentvoucher> pvhList = PaymentVoucherDB.getRVINFOForProjectTrans(txtProjectID.Text, 3);
                         foreach (paymentvoucher pvh in pvhList)
                         {
                             grdDetailList.Rows.Add();
@@ -321,7 +326,7 @@ namespace CSLERP
                         grdDetailList.Columns["Customer"].HeaderText = "SLName";
                         grdDetailList.Columns["gValue"].Visible = false;
                         grdDetailList.Columns["TaxAmount"].Visible = false;
-                        List<ReceiptVoucherHeader> rvhlist = ReceiptVoucherDB.getRVINFOForProjectTrans(cmbProject.SelectedItem.ToString());
+                        List<ReceiptVoucherHeader> rvhlist = ReceiptVoucherDB.getRVINFOForProjectTrans(txtProjectID.Text);
                         foreach (ReceiptVoucherHeader rvh in rvhlist)
                         {
                             grdDetailList.Rows.Add();
@@ -369,26 +374,26 @@ namespace CSLERP
         {
             try
             {
-                if (cmbProject.SelectedIndex != -1)
-                {
-                    grdMainList.Rows.Clear();
-                    grdDetailList.Rows.Clear();
-                    grdDetailList.Visible = false;
-                    btnCancel.Visible = false;
-                    ProjectHeaderDB phdb = new ProjectHeaderDB();
-                    List<projectheader> PHList = phdb.getFilteredProjectHeader("", 6);
-                    foreach (projectheader head in PHList)
-                    {
-                        if (head.ProjectID.Equals(cmbProject.SelectedItem))
-                        {
-                            txtProjectID.Text = head.ProjectID;
-                            txtClient.Text = head.CustomerID + "-" + head.CustomerName;
-                            dtStartDate.Value = head.StartDate;
-                            dtTargetDate.Value = head.TargetDate;
-                        }
-                    }
-                    addGridRows();
-                }
+                //if (cmbProject.SelectedIndex != -1)
+                //{
+                //    grdMainList.Rows.Clear();
+                //    grdDetailList.Rows.Clear();
+                //    grdDetailList.Visible = false;
+                //    btnCancel.Visible = false;
+                //    ProjectHeaderDB phdb = new ProjectHeaderDB();
+                //    List<projectheader> PHList = phdb.getFilteredProjectHeader("", 6);
+                //    foreach (projectheader head in PHList)
+                //    {
+                //        if (head.ProjectID.Equals(cmbProject.SelectedItem))
+                //        {
+                //            txtProjectID.Text = head.ProjectID;
+                //            txtClient.Text = head.CustomerID + "-" + head.CustomerName;
+                //            dtStartDate.Value = head.StartDate;
+                //            dtTargetDate.Value = head.TargetDate;
+                //        }
+                //    }
+                //    addGridRows();
+                //}
             }
             catch (Exception edx)
             {
@@ -459,6 +464,236 @@ namespace CSLERP
             {
             }
         }
+
+        private void btnPrjctSel_Click(object sender, EventArgs e)
+        {
+            showProjectDataGridView();
+        }
+
+
+        //grid
+        private void showProjectDataGridView()
+        {
+            try
+            {
+                frmPopup = new Form();
+                frmPopup.StartPosition = FormStartPosition.CenterScreen;
+                frmPopup.BackColor = Color.CadetBlue;
+
+                frmPopup.MaximizeBox = false;
+                frmPopup.MinimizeBox = false;
+                frmPopup.ControlBox = false;
+                frmPopup.FormBorderStyle = FormBorderStyle.FixedSingle;
+                frmPopup.Size = new Size(850, 370);
+
+                
+
+                Label lblstat = new Label();
+                lblstat.Location = new System.Drawing.Point(10, 5);
+                lblstat.AutoSize = true;
+                lblstat.Text = "Search by Status";
+                lblstat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9, FontStyle.Bold);
+                lblstat.ForeColor = Color.Black;
+                frmPopup.Controls.Add(lblstat);
+
+                
+
+                cmbprojectstat = new ComboBox();
+                cmbprojectstat.Size = new Size(200, 18);
+                cmbprojectstat.Location = new System.Drawing.Point(160, 3);
+                
+                cmbprojectstat.DropDownStyle = ComboBoxStyle.DropDownList;
+                StatusCatalogueDB.fillStatusCatalogueCombo(cmbprojectstat, "PROJECT");
+                cmbprojectstat.Items.Add("All");
+                cmbprojectstat.SelectedIndexChanged += new System.EventHandler(this.cmbprojectstatchanged);
+                cmbprojectstat.SelectedIndex = cmbprojectstat.FindString("Started");
+                frmPopup.Controls.Add(cmbprojectstat);
+
+                Label lblSearch = new Label();
+                lblSearch.Location = new System.Drawing.Point(450, 5);
+                lblSearch.AutoSize = true;
+                lblSearch.Text = "Search by Name";
+                lblSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9, FontStyle.Bold);
+                lblSearch.ForeColor = Color.Black;
+                frmPopup.Controls.Add(lblSearch);
+
+                txtSearch = new TextBox();
+                txtSearch.Size = new Size(220, 18);
+                txtSearch.Location = new System.Drawing.Point(600, 3);
+                txtSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9, FontStyle.Regular);
+                txtSearch.ForeColor = Color.Black;
+                txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChangedInDocGridList);
+                txtSearch.TabIndex = 0;
+                txtSearch.Focus();
+                frmPopup.Controls.Add(txtSearch);
+                
+                Button lvOK = new Button();
+                lvOK.BackColor = Color.Tan;
+                lvOK.Text = "OK";
+                lvOK.Location = new System.Drawing.Point(20, 335);
+                lvOK.Click += new System.EventHandler(this.grddocOK_Click1);
+                frmPopup.Controls.Add(lvOK);
+
+                Button lvCancel = new Button();
+                lvCancel.Text = "CANCEL";
+                lvCancel.BackColor = Color.Tan;
+                lvCancel.Location = new System.Drawing.Point(110, 335);
+                lvCancel.Click += new System.EventHandler(this.grdCancel_Click1);
+                frmPopup.Controls.Add(lvCancel);
+                frmPopup.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void grddocOK_Click1(object sender, EventArgs e)
+        {
+            string users = "";
+            try
+            {
+                var checkedRows = from DataGridViewRow r in grdEmpList.Rows
+                                  where Convert.ToBoolean(r.Cells["Select"].Value) == true
+                                  select r;
+                int selectedRowCount = checkedRows.Count();
+                if (selectedRowCount != 1)
+                {
+                    MessageBox.Show("Select one Document");
+                    return;
+                }
+
+                foreach (var row in checkedRows)
+                {
+                    grdMainList.Rows.Clear();
+                    grdDetailList.Rows.Clear();
+                    grdDetailList.Visible = false;
+                    btnCancel.Visible = false;
+                    txtProjectID.Text = row.Cells["ProjectID"].Value.ToString() ;
+                    txtClient.Text = row.Cells["CustomerName"].Value.ToString();
+                    txtProjectManager.Text = row.Cells["ProjectManagerName"].Value.ToString();
+                    dtStartDate.Value = Convert.ToDateTime(row.Cells["StartDate"].Value.ToString());
+                    dtTargetDate.Value = Convert.ToDateTime(row.Cells["TargetDate"].Value.ToString());
+                }
+                addGridRows();
+                frmPopup.Close();
+                frmPopup.Dispose();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void grdCancel_Click1(object sender, EventArgs e)
+        {
+            try
+            {
+                frmPopup.Close();
+                frmPopup.Dispose();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void cmbprojectstatchanged(object sender, EventArgs e)
+        {
+            try
+            {
+                txtSearch.Text = "";
+              if(  cmbprojectstat.SelectedItem.ToString() != "All")
+                {
+                    prjstat = Convert.ToInt32(((Structures.ComboBoxItem)cmbprojectstat.SelectedItem).HiddenValue);
+                }
+                else
+                {
+                    prjstat = 0;
+                }
+                creategrid();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void txtSearch_TextChangedInDocGridList(object sender, EventArgs e)
+        {
+            try
+            {
+                filterGridDocData();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void filterGridDocData()
+        {
+            try
+            {
+                grdEmpList.CurrentCell = null;
+                foreach (DataGridViewRow row in grdEmpList.Rows)
+                {
+                    row.Visible = true;
+                }
+                if (txtSearch.Text.Length != 0)
+                {
+                    foreach (DataGridViewRow row in grdEmpList.Rows)
+                    {
+                        if (!row.Cells["ProjectID"].Value.ToString().Trim().ToLower().Contains(txtSearch.Text.Trim().ToLower()))
+                        {
+                            row.Visible = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception Searching");
+            }
+        }
+
+        public void creategrid()
+        {
+            frmPopup.Controls.Remove(grdEmpList);
+            ProjectHeaderDB phdb = new ProjectHeaderDB();
+            grdEmpList = phdb.getProjectlistGrid(prjstat);
+
+            grdEmpList.Bounds = new Rectangle(new Point(0, 27), new Size(850, 300));
+            frmPopup.Controls.Add(grdEmpList);
+            grdEmpList.Columns["RowID"].Visible = false;
+            grdEmpList.Columns["DocumentID"].Visible = false;
+            grdEmpList.Columns["DocumentStatus"].Visible = false;
+            grdEmpList.Columns["DocumentName"].Visible = false;
+            grdEmpList.Columns["TemporaryNo"].Visible = false;
+            grdEmpList.Columns["TemporaryDate"].Visible = false;
+            grdEmpList.Columns["TrackingNo"].Visible = false;
+            grdEmpList.Columns["TrackingDate"].Visible = false;
+            grdEmpList.Columns["ProjectManager"].Visible = false;
+            grdEmpList.Columns["CustomerID"].Visible = false;
+            grdEmpList.Columns["Status"].Visible = false;
+            grdEmpList.Columns["DocumentStatus"].Visible = false;
+            grdEmpList.Columns["CreateTime"].Visible = false;
+            grdEmpList.Columns["CreateUser"].Visible = false;
+            grdEmpList.Columns["ForwardUser"].Visible = false;
+            grdEmpList.Columns["ApproveUser"].Visible = false;
+            grdEmpList.Columns["CreatorName"].Visible = false;
+            grdEmpList.Columns["ForwarderName"].Visible = false;
+            grdEmpList.Columns["ApproverName"].Visible = false;
+            grdEmpList.Columns["ForwarderList"].Visible = false;
+            grdEmpList.Columns["OfficeID"].Visible = false;
+            grdEmpList.Columns["OfficeName"].Visible = false;
+            grdEmpList.Columns["ShortDescription"].Visible = false;
+            grdEmpList.Columns["ProjectStatus"].Visible = false;
+            grdEmpList.Columns["ProjectID"].Width = 200;
+            grdEmpList.Columns["CustomerName"].Width = 250;
+            grdEmpList.Columns["ProjectManagerName"].Width = 131;
+            grdEmpList.Columns["StartDate"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            grdEmpList.Columns["TargetDate"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            foreach (DataGridViewColumn column in grdEmpList.Columns)
+                column.SortMode = DataGridViewColumnSortMode.Automatic;
+        }        
     }
 }
 

@@ -20,6 +20,7 @@ namespace CSLERP.DBData
         public string ProjectID { get; set; }
         public string ProjectManager { get; set; }
         public string ProjectManagerName { get; set; }
+        public int ProjectStatus { get; set; }
         public string ShortDescription { get; set; }
         public string CustomerID { get; set; }
         public string CustomerName { get; set; }
@@ -514,6 +515,126 @@ namespace CSLERP.DBData
             {
             }
             return grdCust;
+        }
+
+        //gridadded
+        public DataGridView getProjectlistGrid(int stat)
+        {
+            DataGridView empGgrid = new DataGridView();
+            try
+            {
+                DataGridViewCheckBoxColumn colChk = new DataGridViewCheckBoxColumn();
+                colChk.Width = 50;
+                colChk.Name = "Select";
+                colChk.HeaderText = "Select";
+                colChk.ReadOnly = false;
+
+                DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+                dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+                dataGridViewCellStyle1.BackColor = System.Drawing.Color.LightSeaGreen;
+                dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+                dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+                dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+                dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+                empGgrid.EnableHeadersVisualStyles = false;
+
+                empGgrid.AllowUserToAddRows = false;
+                empGgrid.AllowUserToDeleteRows = false;
+                empGgrid.BackgroundColor = System.Drawing.SystemColors.GradientActiveCaption;
+                empGgrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+                empGgrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+                empGgrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+                empGgrid.ColumnHeadersHeight = 27;
+                empGgrid.RowHeadersVisible = false;
+                empGgrid.Columns.Add(colChk);
+
+                ProjectHeaderDB phdb = new ProjectHeaderDB();
+                List<projectheader> PHList = new List<projectheader>();
+                if (stat==0)
+                {
+                    PHList = phdb.getFilteredProject();
+                }
+                else
+                {
+                     PHList = phdb.getFilteredProject().Where(x => x.ProjectStatus == stat).ToList();
+                }                
+                empGgrid.DataSource = PHList;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return empGgrid;
+        }
+
+        public List<projectheader> getFilteredProject()
+        {
+            projectheader pheader;
+            List<projectheader> pheaderlist = new List<projectheader>();
+            try
+            {
+
+                string query = "select RowID, DocumentID, DocumentName,TemporaryNo,TemporaryDate," +
+                    " TrackingNo,TrackingDate,ProjectID,ProjectManager,ProjectManagerName,ShortDescription,CustomerID,CustomerName,StartDate," +
+                    " TargetDate,Status,DocumentStatus,CreateTime, " +
+                    "CreateUser,ForwardUser,ApproveUser,CreatorName,ForwarderName,ApproverName,ForwarderList,OfficeID,OfficeName,ProjectStatus" +
+                    " from ViewProjectHeader" +
+                   " where  DocumentStatus = 99  and Status = 1 order by ProjectID";
+
+                SqlConnection conn = new SqlConnection(Login.connString);
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    pheader = new projectheader();
+                    pheader.rowID = reader.GetInt32(0);
+                    pheader.DocumentID = reader.GetString(1);
+                    pheader.DocumentName = reader.GetString(2);
+                    pheader.TemporaryNo = reader.GetInt32(3);
+                    pheader.TemporaryDate = reader.GetDateTime(4);
+                    pheader.TrackingNo = reader.GetInt32(5);
+                    pheader.TrackingDate = reader.GetDateTime(6);
+                    pheader.ProjectID = reader.IsDBNull(7) ? "" : reader.GetString(7);
+                    pheader.ProjectManager = reader.IsDBNull(8) ? "" : reader.GetString(8);
+                    pheader.ProjectManagerName = reader.IsDBNull(9) ? "" : reader.GetString(9);
+                    pheader.ShortDescription = reader.IsDBNull(10) ? "" : reader.GetString(10);
+                    pheader.CustomerID = reader.IsDBNull(11) ? "" : reader.GetString(11);
+                    pheader.CustomerName = reader.IsDBNull(12) ? "" : reader.GetString(12);
+                    pheader.StartDate = reader.GetDateTime(13);
+                    pheader.TargetDate = reader.GetDateTime(14);
+                    pheader.Status = reader.GetInt32(15);
+                    pheader.DocumentStatus = reader.GetInt32(16);
+                    pheader.CreateTime = reader.GetDateTime(17);
+                    pheader.CreateUser = reader.GetString(18);
+                    pheader.ForwardUser = reader.GetString(19);
+                    pheader.ApproveUser = reader.GetString(20);
+                    pheader.CreatorName = reader.GetString(21);
+                    pheader.ForwarderName = reader.GetString(22);
+                    pheader.ApproverName = reader.GetString(23);
+                    if (!reader.IsDBNull(24))
+                    {
+                        pheader.ForwarderList = reader.GetString(24);
+                    }
+                    else
+                    {
+                        pheader.ForwarderList = "";
+                    }
+                    pheader.OfficeID = reader.IsDBNull(25) ? "" : reader.GetString(25);
+                    pheader.OfficeName = reader.IsDBNull(26) ? "" : reader.GetString(26);
+                    pheader.ProjectStatus = reader.GetInt32(27);
+                    pheaderlist.Add(pheader);
+                }
+                conn.Close();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error querying Project  Data");
+            }
+            return pheaderlist;
+
         }
     }
 }
